@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import type { DefaultSession } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { SupabaseAdapter } from "@next-auth/supabase-adapter";
 import CryptoJS from "crypto-js";
 
 // Augment NextAuth Session type to include token fields on user
@@ -53,11 +52,10 @@ export default NextAuth({
         }),
     ],
 
-    // Stores user data in Supabase
-    adapter: SupabaseAdapter({
-        url: process.env.SUPABASE_URL!,
-        secret: process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    }),
+    // Use JWT strategy instead of database sessions
+    session: {
+        strategy: "jwt",
+    },
 
     // Secret for encrypting tokens
     secret: process.env.NEXTAUTH_SECRET,
